@@ -4,8 +4,7 @@ import uvicorn
 import time
 import rumps
 import os
-from backend.app import app as fastapi_app
-from backend.service import service
+from backend.app import app as fastapi_app, service
 
 def start_server():
     uvicorn.run(fastapi_app, port=8000, log_level="error")
