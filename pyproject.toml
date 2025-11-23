@@ -1,0 +1,17 @@
+[project]
+name = "open-whisper"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.121.3",
+    "pyautogui>=0.9.54",
+    "pynput>=1.8.1",
+    "pyperclip>=1.11.0",
+    "pywebview>=6.1",
+    "sounddevice>=0.5.3",
+    "uvicorn>=0.38.0",
+    "websockets>=15.0.1",
+    "whisper-ctranslate2>=0.5.5",
+]

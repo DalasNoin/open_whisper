@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Whisper</title>
+    <link rel="icon" type="image/svg+xml" href="static/icon.svg">
+    <link rel="stylesheet" href="static/style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <h1>Open Whisper</h1>
+                <div id="status" style="color: #888; font-size: 0.9rem;">Paused</div>
+            </div>
+            <div id="queue-status"
+                style="color: #888; font-size: 0.9rem; display: none; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.1);">
+                Queue: 0</div>
+            <div class="controls">
+                <button id="mic-btn" title="Stop Listening">
+                    <i data-lucide="mic"></i>
+                </button>
+                <button id="copy-btn" title="Copy All">
+                    <i data-lucide="copy"></i>
+                </button>
+                <button id="paste-btn" title="Paste to Cursor">
+                    <span style="font-size: 1.2em; font-weight: bold;">⎋</span>
+                </button>
+                <button id="save-btn" title="Save to JSONL">
+                    <i data-lucide="save"></i>
+                </button>
+                <button id="settings-btn" title="Settings">
+                    <i data-lucide="settings"></i>
+                </button>
+            </div>
+            <div id="visualizer-container"
+                style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: transparent; pointer-events: none;">
+                <div id="visualizer-bar"
+                    style="width: 0%; height: 100%; background: #646cff; transition: width 0.03s linear; margin: 0 auto;">
+                </div>
+                <div id="visualizer-threshold"
+                    style="position: absolute; top: 0; bottom: 0; width: 2px; background-color: rgba(255, 255, 255, 0.5); left: 0%;">
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="main-content">
+                <div id="transcript-view" class="transcript-view">
+                    <!-- Transcripts will be appended here -->
+                </div>
+            </div>
+
+            <aside id="queue-sidebar" class="queue-sidebar">
+                <div class="sidebar-header">
+                    <h3>Queue Status</h3>
+                    <span id="queue-size-badge" class="badge">0</span>
+                </div>
+
+                <div class="stats-section">
+                    <div class="stat-item">
+                        <span class="stat-label">Processed:</span>
+                        <span id="stat-total-processed">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Avg Time:</span>
+                        <span id="stat-avg-time">0s</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Dropped:</span>
+                        <span id="stat-dropped">0</span>
+                    </div>
+                </div>
+
+                <div class="queue-section">
+                    <h4>Processing</h4>
+                    <div id="processing-items" class="queue-items">
+                        <div class="empty-state">No items processing</div>
+                    </div>
+                </div>
+
+                <div class="queue-section">
+                    <h4>Queued</h4>
+                    <div id="queued-items" class="queue-items">
+                        <div class="empty-state">No items in queue</div>
+                    </div>
+                </div>
+
+                <div class="queue-section">
+                    <h4>Recent History</h4>
+                    <div id="history-items" class="queue-items history-items">
+                        <div class="empty-state">No history yet</div>
+                    </div>
+                </div>
+            </aside>
+
+            <div id="settings-panel" class="settings-panel" style="display: none;">
+                <h2>Settings</h2>
+                <div class="setting-item">
+                    <label>Model</label>
+                    <select id="model-select">
+                        <option value="tiny">Tiny</option>
+                        <option value="base">Base</option>
+                        <option value="small">Small</option>
+                        <option value="medium">Medium</option>
+                        <option value="large-v2">Large v2</option>
+                        <option value="turbo">Turbo</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <label>Language</label>
+                    <input id="language-input" type="text">
+                </div>
+                <div class="setting-item">
+                    <label>Volume Threshold</label>
+                    <input id="volume-input" type="number" step="0.01">
+                </div>
+                <div class="setting-item">
+                    <label>Silence Duration (ms)</label>
+                    <input id="silence-input" type="number" step="100">
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="static/app.js"></script>
+</body>
+
+</html>
