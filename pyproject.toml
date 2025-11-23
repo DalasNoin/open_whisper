@@ -10,6 +10,7 @@ dependencies = [
     "pynput>=1.8.1",
     "pyperclip>=1.11.0",
     "pywebview>=6.1",
+    "rumps>=0.4.0",
     "sounddevice>=0.5.3",
     "uvicorn>=0.38.0",
     "websockets>=15.0.1",

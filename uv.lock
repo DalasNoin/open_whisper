@@ -569,6 +569,7 @@ dependencies = [
     { name = "pynput" },
     { name = "pyperclip" },
     { name = "pywebview" },
+    { name = "rumps" },
     { name = "sounddevice" },
     { name = "uvicorn" },
     { name = "websockets" },
@@ -582,6 +583,7 @@ requires-dist = [
     { name = "pynput", specifier = ">=1.8.1" },
     { name = "pyperclip", specifier = ">=1.11.0" },
     { name = "pywebview", specifier = ">=6.1" },
+    { name = "rumps", specifier = ">=0.4.0" },
     { name = "sounddevice", specifier = ">=0.5.3" },
     { name = "uvicorn", specifier = ">=0.38.0" },
     { name = "websockets", specifier = ">=15.0.1" },
@@ -1179,6 +1181,15 @@ sdist = { url = "https://files.pythonhosted.org/packages/a7/2f/612049b8601e81008
 wheels = [
     { url = "https://files.pythonhosted.org/packages/9f/a4/11ad29100060af56408ed084dca76a16d2ce8eb31b75081bfc0eec45d755/rubicon_objc-0.5.2-py3-none-any.whl", hash = "sha256:829b253c579e51fc34f4bb6587c34806e78960dcc1eb24e62b38141a1fe02b39", size = 63512, upload-time = "2025-08-07T06:12:23.766Z" },
 ]
+
+[[package]]
+name = "rumps"
+version = "0.4.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pyobjc-framework-cocoa" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b2/e2/2e6a47951290bd1a2831dcc50aec4b25d104c0cf00e8b7868cbd29cf3bfe/rumps-0.4.0.tar.gz", hash = "sha256:17fb33c21b54b1e25db0d71d1d793dc19dc3c0b7d8c79dc6d833d0cffc8b1596", size = 39257, upload-time = "2022-10-15T05:15:10.386Z" }
 
 [[package]]
 name = "setuptools"

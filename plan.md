@@ -68,6 +68,8 @@ Open Whisper is a **local, real-time speech-to-text desktop application** built 
 - **Voice Activity Detection**: Automatically detects speech and silence
 
 ### User Interface
+- **Menu Bar App**: Lives in macOS menu bar (top right) with microphone icon 🎤
+- **Show/Hide Window**: Click menu bar icon to toggle window visibility
 - **Live Status Indicator**: Shows "Listening...", "Paused", or "Transcribing..."
 - **Queue Monitor**: Displays pending transcription count with color-coded warnings
 - **Audio Visualizer**: Real-time volume bar with threshold marker
@@ -80,6 +82,8 @@ Open Whisper is a **local, real-time speech-to-text desktop application** built 
 ### Output Options
 - **Copy All**: Copy entire transcript to clipboard
 - **Paste to Cursor**: Automatically paste transcript into active application
+- **Global Hotkey (Cmd+Shift+V)**: Paste transcripts anywhere, even when app is hidden
+- **Menu Bar Paste**: Click "Paste Transcripts" from menu bar
 - **Save to JSONL**: Export transcript with timestamps to `transcripts/` directory
 
 ## Configuration
@@ -125,6 +129,8 @@ See `pyproject.toml` for full list. Key dependencies:
 - pywebview
 - pyautogui
 - pyperclip
+- pynput (global hotkeys)
+- rumps (macOS menu bar app)
 
 ## Installation & Usage
 
@@ -144,10 +150,13 @@ uv sync
 - Install packages: `uv add package_name`
 
 ### First Run
-1. Grant microphone permissions when prompted
-2. Grant Accessibility permissions for "Paste to Cursor" (macOS)
-3. Click the microphone icon to start listening
-4. Speak naturally - transcription appears after brief pauses
+1. App appears as microphone icon 🎤 in menu bar (top right)
+2. Click the icon → "Show Window" to open the interface
+3. Grant microphone permissions when prompted
+4. Grant Accessibility permissions for global hotkey (Cmd+Shift+V)
+5. Click the microphone button in the app to start listening
+6. Speak naturally - transcription appears after brief pauses
+7. Press Cmd+Shift+V anywhere to paste, or hide the window and keep it running in background
 
 ## Project Structure
 
