@@ -341,3 +341,95 @@ async function fetchQueueStatus() {
 // Fetch queue status on load and periodically
 fetchQueueStatus();
 setInterval(fetchQueueStatus, 5000); // Update every 5 seconds
+
+// Drag and Drop File Transcription
+const dropZone = document.getElementById('drop-zone');
+const transcriptView = document.getElementById('transcript-view');
+
+// Show drop zone when dragging files over the window
+['dragenter', 'dragover'].forEach(eventName => {
+    document.body.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.dataTransfer.types.includes('Files')) {
+            dropZone.classList.add('active');
+        }
+    });
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    document.body.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.remove('active', 'drag-over');
+    });
+});
+
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+});
+
+dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('drag-over');
+});
+
+dropZone.addEventListener('drop', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const files = Array.from(e.dataTransfer.files);
+    const audioFiles = files.filter(file =>
+        file.type.startsWith('audio/') ||
+        /\.(mp3|wav|m4a|ogg|flac|aac|wma)$/i.test(file.name)
+    );
+
+    if (audioFiles.length === 0) {
+        alert('Please drop audio files (MP3, WAV, M4A, OGG, FLAC)');
+        return;
+    }
+
+    for (const file of audioFiles) {
+        await transcribeFile(file);
+    }
+});
+
+async function transcribeFile(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // Show progress
+    const progressItem = document.createElement('div');
+    progressItem.className = 'transcript-item';
+    progressItem.innerHTML = `
+        <span class="timestamp">${new Date().toLocaleTimeString()}</span>
+        <p style="color: #888;">Transcribing ${file.name}...</p>
+    `;
+    transcriptView.appendChild(progressItem);
+    progressItem.scrollIntoView({ behavior: 'smooth' });
+
+    try {
+        const response = await fetch(`${API_URL}/transcribe_file`, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Remove progress indicator
+        progressItem.remove();
+
+        // Add transcript
+        if (data.text) {
+            addTranscript(`[${file.name}] ${data.text}`);
+        }
+    } catch (error) {
+        console.error('Error transcribing file:', error);
+        progressItem.querySelector('p').textContent = `Error transcribing ${file.name}: ${error.message}`;
+        progressItem.querySelector('p').style.color = '#ff4444';
+    }
+}

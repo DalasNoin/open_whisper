@@ -267,3 +267,42 @@ select {
     padding: 0.5rem;
     text-align: center;
 }
+
+/* Drop Zone */
+.drop-zone {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 3rem 2rem;
+    border: 2px dashed #444;
+    border-radius: 12px;
+    text-align: center;
+    color: #888;
+    background: rgba(255, 255, 255, 0.02);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s, border-color 0.2s;
+}
+
+.drop-zone.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.drop-zone.drag-over {
+    border-color: var(--accent-color);
+    background: rgba(100, 108, 255, 0.1);
+}
+
+.drop-zone p {
+    margin: 1rem 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: #aaa;
+}
+
+.drop-zone .file-types {
+    font-size: 0.8rem;
+    color: #666;
+}

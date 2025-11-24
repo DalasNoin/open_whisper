@@ -1,4 +1,4 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import asyncio
@@ -7,6 +7,8 @@ import pyautogui
 import pyperclip
 import time
 import os
+import tempfile
+import numpy as np
 from datetime import datetime
 from .service import TranscriptionService
 from .config import load_config, save_config, update_config
@@ -111,6 +113,86 @@ async def set_config(update: ConfigUpdate):
 @app.get("/queue_status")
 async def get_queue_status():
     return service.get_queue_status()
+
+@app.post("/transcribe_file")
+async def transcribe_file(file: UploadFile = File(...)):
+    """Transcribe an uploaded audio file"""
+    try:
+        # Save uploaded file temporarily
+        with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as tmp:
+            content = await file.read()
+            tmp.write(content)
+            tmp_path = tmp.name
+
+        # Use the transcription model to transcribe the file
+        if not service.transcribe_model:
+            from whisper_ctranslate2.transcribe import Transcribe, TranscriptionOptions
+            service.transcribe_model = Transcribe(
+                model_path=service.config.get("model", "turbo"),
+                device="auto",
+                device_index=0,
+                compute_type="int8",
+                threads=4,
+                cache_directory=None,
+                local_files_only=False,
+                batched=False
+            )
+
+        from whisper_ctranslate2.transcribe import TranscriptionOptions
+        options = TranscriptionOptions(
+            beam_size=5,
+            best_of=5,
+            patience=1,
+            length_penalty=1,
+            repetition_penalty=1,
+            no_repeat_ngram_size=0,
+            log_prob_threshold=-1.0,
+            no_speech_threshold=0.6,
+            compression_ratio_threshold=2.4,
+            condition_on_previous_text=True,
+            prompt_reset_on_temperature=0.5,
+            initial_prompt=None,
+            prefix=None,
+            suppress_blank=True,
+            suppress_tokens=[-1],
+            word_timestamps=False,
+            prepend_punctuations="\"'"¿([{-",
+            append_punctuations="\"'.。,，!！?？:：")]}、",
+            temperature=0.0,
+            hotwords=None,
+            print_colors=False,
+            hallucination_silence_threshold=None,
+            vad_threshold=None,
+            multilingual=False,
+            vad_filter=service.config.get("vad_filter", True),
+            vad_min_speech_duration_ms=service.config.get("vad_min_speech_duration_ms", 1500),
+            vad_max_speech_duration_s=service.config.get("vad_max_speech_duration_s", 30),
+            vad_min_silence_duration_ms=service.config.get("vad_min_silence_duration_ms", 500),
+        )
+
+        # Transcribe the file
+        result = service.transcribe_model.inference(
+            audio=tmp_path,
+            task="transcribe",
+            language=service.config.get("language", "en"),
+            verbose=False,
+            live=False,
+            options=options,
+        )
+
+        # Clean up temp file
+        os.unlink(tmp_path)
+
+        return {"text": result['text'].strip(), "filename": file.filename}
+
+    except Exception as e:
+        # Clean up temp file if it exists
+        if 'tmp_path' in locals():
+            try:
+                os.unlink(tmp_path)
+            except:
+                pass
+        raise Exception(f"Error transcribing file: {str(e)}")
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
