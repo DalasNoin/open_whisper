@@ -9,6 +9,7 @@ dependencies = [
     "pyautogui>=0.9.54",
     "pynput>=1.8.1",
     "pyperclip>=1.11.0",
+    "python-multipart>=0.0.20",
     "pywebview>=6.1",
     "rumps>=0.4.0",
     "sounddevice>=0.5.3",

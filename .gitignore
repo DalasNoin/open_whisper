@@ -4,6 +4,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+transcripts/
+transcript-*.jsonl
+config.json
+
 # C extensions
 *.so
 

@@ -14,6 +14,7 @@ const micBtn = document.getElementById('mic-btn');
 const copyBtn = document.getElementById('copy-btn');
 const pasteBtn = document.getElementById('paste-btn');
 const saveBtn = document.getElementById('save-btn');
+const clearBtn = document.getElementById('clear-btn');
 const settingsBtn = document.getElementById('settings-btn');
 const transcriptView = document.getElementById('transcript-view');
 const settingsPanel = document.getElementById('settings-panel');
@@ -30,6 +31,7 @@ micBtn.addEventListener('click', toggleListening);
 copyBtn.addEventListener('click', copyToClipboard);
 pasteBtn.addEventListener('click', pasteToCursor);
 saveBtn.addEventListener('click', saveTranscript);
+clearBtn.addEventListener('click', clearTranscripts);
 settingsBtn.addEventListener('click', toggleSettings);
 modelSelect.addEventListener('change', (e) => updateConfig('model', e.target.value));
 languageInput.addEventListener('change', (e) => updateConfig('language', e.target.value));
@@ -206,6 +208,11 @@ async function saveTranscript() {
     }
 }
 
+function clearTranscripts() {
+    transcripts = [];
+    transcriptView.innerHTML = '';
+}
+
 function toggleSettings() {
     const isHidden = settingsPanel.style.display === 'none';
     settingsPanel.style.display = isHidden ? 'block' : 'none';
@@ -344,7 +351,6 @@ setInterval(fetchQueueStatus, 5000); // Update every 5 seconds
 
 // Drag and Drop File Transcription
 const dropZone = document.getElementById('drop-zone');
-const transcriptView = document.getElementById('transcript-view');
 
 // Show drop zone when dragging files over the window
 ['dragenter', 'dragover'].forEach(eventName => {
