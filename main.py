@@ -1,9 +1,8 @@
-import webview
 import threading
 import uvicorn
 import time
 import rumps
-import os
+import webbrowser
 from backend.app import app as fastapi_app, service
 
 def start_server():
@@ -14,13 +13,12 @@ class OpenWhisperApp(rumps.App):
         # Use a simple emoji for the menu bar icon
         super(OpenWhisperApp, self).__init__("🎤", quit_button=None)
 
-        self.window = None
         self.server_thread = None
-        self.window_visible = False
+        self.window_opened = False
 
         # Menu items
         self.menu = [
-            rumps.MenuItem("Show Window", callback=self.toggle_window),
+            rumps.MenuItem("Open Window", callback=self.open_window),
             rumps.separator,
             rumps.MenuItem("Paste Transcripts (⌘⇧V)", callback=self.paste_transcripts),
             rumps.separator,
@@ -33,32 +31,10 @@ class OpenWhisperApp(rumps.App):
         self.server_thread.start()
         time.sleep(1)  # Wait for server to start
 
-    def toggle_window(self, _):
-        """Show or hide the main window"""
-        if self.window is None:
-            # Create window first time
-            self.window = webview.create_window(
-                'Open Whisper',
-                'http://localhost:8000',
-                width=800,
-                height=600,
-                hidden=False
-            )
-            # Start webview in a separate thread
-            webview_thread = threading.Thread(target=webview.start, daemon=False)
-            webview_thread.start()
-            self.window_visible = True
-            self.menu["Show Window"].title = "Hide Window"
-        else:
-            # Toggle visibility
-            if self.window_visible:
-                self.window.hide()
-                self.window_visible = False
-                self.menu["Show Window"].title = "Show Window"
-            else:
-                self.window.show()
-                self.window_visible = True
-                self.menu["Show Window"].title = "Hide Window"
+    def open_window(self, _):
+        """Open the interface in default browser"""
+        webbrowser.open('http://localhost:8000')
+        self.window_opened = True
 
     def paste_transcripts(self, _):
         """Manually trigger paste (same as Cmd+Shift+V)"""
