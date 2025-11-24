@@ -88,8 +88,8 @@ class TranscriptionService:
             self.hotkey_listener.stop()
 
     def _start_hotkey_listener(self):
-        """Start global hotkey listener for Cmd+Shift+V (macOS) or Ctrl+Shift+V"""
-        def on_activate():
+        """Start global hotkey listener for Cmd+Shift+V and Cmd+Shift+R"""
+        def on_paste():
             """Paste transcripts when hotkey is pressed"""
             if self.transcripts:
                 text = '\n'.join(self.transcripts)
@@ -98,23 +98,45 @@ class TranscriptionService:
                 # Cmd+V on macOS
                 pyautogui.hotkey('command', 'v')
 
-        # Use Cmd+Shift+V on macOS
-        hotkey = keyboard.HotKey(
+        def on_toggle_recording():
+            """Toggle recording when hotkey is pressed"""
+            self.listening = not self.listening
+            status = "Recording started" if self.listening else "Recording stopped"
+            print(f"[Hotkey] {status}")
+
+            # If stopping, copy current transcript to clipboard
+            if not self.listening and self.transcripts:
+                text = '\n'.join(self.transcripts)
+                pyperclip.copy(text)
+                print(f"[Hotkey] Copied {len(self.transcripts)} transcript(s) to clipboard")
+
+        # Create hotkeys
+        paste_hotkey = keyboard.HotKey(
             keyboard.HotKey.parse('<cmd>+<shift>+v'),
-            on_activate
+            on_paste
         )
 
-        def for_canonical(f):
-            return lambda k: f(hotkey_listener.canonical(k))
+        record_hotkey = keyboard.HotKey(
+            keyboard.HotKey.parse('<cmd>+<shift>+r'),
+            on_toggle_recording
+        )
+
+        def for_canonical(paste_fn, record_fn):
+            def handler(key):
+                paste_fn(key)
+                record_fn(key)
+            return handler
 
         hotkey_listener = keyboard.Listener(
-            on_press=for_canonical(hotkey.press),
-            on_release=for_canonical(hotkey.release)
+            on_press=for_canonical(paste_hotkey.press, record_hotkey.press),
+            on_release=for_canonical(paste_hotkey.release, record_hotkey.release)
         )
 
         hotkey_listener.start()
         self.hotkey_listener = hotkey_listener
-        print("Global hotkey Cmd+Shift+V registered for paste")
+        print("Global hotkeys registered:")
+        print("  Cmd+Shift+V - Paste transcripts")
+        print("  Cmd+Shift+R - Toggle recording (auto-copies on stop)")
             
     def _is_there_voice(self, indata, frames, sample_rate):
         freq = (
