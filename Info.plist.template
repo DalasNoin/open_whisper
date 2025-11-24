@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>Open Whisper Desktop</string>
+    <key>CFBundleDisplayName</key>
+    <string>Open Whisper</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.openwhisper.desktop</string>
+    <key>CFBundleVersion</key>
+    <string>1.0.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundleIconFile</key>
+    <string>icon.icns</string>
+
+    <!-- Microphone Access -->
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Open Whisper needs microphone access to transcribe your speech in real-time.</string>
+
+    <!-- Accessibility (for global hotkeys) -->
+    <key>NSAppleEventsUsageDescription</key>
+    <string>Open Whisper uses accessibility features to listen for global keyboard shortcuts (Cmd+Shift+R to toggle recording, Cmd+Shift+V to paste).</string>
+
+    <!-- High Sierra+ compatibility -->
+    <key>LSMinimumSystemVersion</key>
+    <string>10.13.0</string>
+
+    <!-- App is agent (doesn't appear in Dock for menu bar version) -->
+    <key>LSUIElement</key>
+    <false/>
+
+    <!-- Retina support -->
+    <key>NSHighResolutionCapable</key>
+    <true/>
+</dict>
+</plist>
